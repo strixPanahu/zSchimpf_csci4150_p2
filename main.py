@@ -138,10 +138,10 @@ if __name__ == '__main__':
 
     print("Forward Frame:")
     analysis = analyze(GENOME)
-    output_std(analysis)
+    eof = output_std(analysis)
 
     print("Reverse Frame:")
     analysis = analyze(GENOME[::-1])
-    output_rev(analysis)
+    eof += output_rev(analysis)
 
-    sys.exit(0)
+    sys.exit(eof)
