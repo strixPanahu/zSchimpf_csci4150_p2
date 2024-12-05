@@ -1,5 +1,6 @@
-import networkx
 from  matplotlib import pyplot
+import networkx
+
 
 stop_codons = [
     ("Isoleucine", "Glutamine", 9),

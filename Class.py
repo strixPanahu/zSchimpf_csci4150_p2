@@ -1,7 +1,9 @@
-import networkx
 from matplotlib import pyplot
+import networkx
+import numpy as np
 
-corrected_connectivity_data = [
+
+classes = [
     ("Aliphatic", "Aliphatic", 197),
     ("Aliphatic", "Aromatic", 155),
     ("Fixed cation", "Aliphatic", 127),
@@ -56,28 +58,32 @@ corrected_connectivity_data = [
 connectivity = networkx.DiGraph()
 
 # Add edges
-for source, target, weight in corrected_connectivity_data:
+for source, target, weight in classes:
     connectivity.add_edge(source, target, weight=weight)
 
-# Extract edge weights for visualization
+# Visualization
 weights = [d['weight'] for (_, _, d) in connectivity.edges(data=True)]
+nodes = [
+    "Cyclic", "Hydroxylic", "Aliphatic", "Aromatic", "Fixed cation",
+    "Anion", "Amide", "Cationic", "Thioether", "Cation", "Thiol"
+]
+positions = {  # iterate to complete the list geometrically
+    node: (np.cos(2 * np.pi * i / len(nodes)), np.sin(2 * np.pi * i / len(nodes)))
+    for i, node in enumerate(nodes)
+}
 
 # Draw the graph
 pyplot.figure(figsize=(14, 12))
-amino_acids_pos = networkx.spring_layout(connectivity, seed=42)  # Positions for nodes
-
-# Draw nodes and edges
-networkx.draw_networkx_nodes(connectivity, amino_acids_pos, node_size=1000, node_color="skyblue")
+networkx.draw_networkx_nodes(connectivity, positions, node_size=1000, node_color="skyblue")
 networkx.draw_networkx_edges(
-    connectivity, amino_acids_pos, width=[w / 20 for w in weights],
+    connectivity, positions, width=[w / 20 for w in weights],
     alpha=0.7, edge_color="black"
 )
-networkx.draw_networkx_labels(connectivity, amino_acids_pos, font_size=12, font_color="black")
+networkx.draw_networkx_labels(connectivity, positions, font_size=12, font_color="black")
 
 # Add edge labels (weights)
 edge_labels = networkx.get_edge_attributes(connectivity, 'weight')
-networkx.draw_networkx_edge_labels(connectivity, amino_acids_pos, edge_labels=edge_labels, font_size=8)
+networkx.draw_networkx_edge_labels(connectivity, positions, edge_labels=edge_labels, font_size=8)
 
-pyplot.title("Amino Acid Classification Connectivity")
-
+pyplot.title("Amino Acid Classification Connectivity with Hendecagon Layout")
 pyplot.show()

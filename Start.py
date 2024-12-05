@@ -1,7 +1,8 @@
 import networkx
 from  matplotlib import pyplot
 
-stop_codons = [
+
+start_codons = [
     ("Leucine", "Tryptophan", 11),
     ("Leucine", "Cysteine", 11),
     ("Leucine", "Tryptophan", 10),
@@ -18,7 +19,7 @@ stop_codons = [
 
 # Aggregate edge weights
 weights = {}
-for source, target, weight in stop_codons:
+for source, target, weight in start_codons:
     weights[(source, target)] = weights.get((source, target), 0) + weight
 
 # Direct the graph
@@ -32,8 +33,8 @@ for (source, target), weight in weights.items():
 weight_output = [d['weight'] for (_, _, d) in amino_acids.edges(data=True)]
 
 # Assign colors
-first_column_nodes = {source for source, _, _ in stop_codons}
-second_column_nodes = {target for _, target, _ in stop_codons}
+first_column_nodes = {source for source, _, _ in start_codons}
+second_column_nodes = {target for _, target, _ in start_codons}
 
 # Map colors
 node_colors_amino_acids = [
